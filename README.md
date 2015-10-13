@@ -1,4 +1,20 @@
 # esCatField
+```
+node ./esCatField.js  --help
+Processing Commandline arguments
+node:
+	[--url=localhost:9200]
+	[--search=<filename> default: default.search
+	[--fetchsize='20'  default: 100 
+	[--context='{ 'custom':'json'}'  default:{"index":"_all","fetchsize":100}
+		Context is what varables pass to the search template for json markup
+		context=<key>=<val> is a way to set any varable inside the context array. 
+		Make sure this is used after --contextfile or --context=<customejson>
+	[--index=<index>|--context=index=<index>     default: _all
+```
+
+Example Command
+
 node ./esCatField.js  --index=std* 
 
 ```
