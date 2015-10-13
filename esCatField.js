@@ -13,12 +13,7 @@ var colour = require('colour')
 **
 ***************************************************/
 // Disable Info messages
-console.info = function (){};
-/**************************************************
-**
-** Varables
-**
-***************************************************/
+// console.info = function (){};
 // Count of documents retrieved which tells us when the scan/scroll is finished
 var count = 0;
 // the Host to connect to
@@ -33,7 +28,6 @@ var loglevel="error"
 // This is used for the JSON Markup - I'll probably add a file option 
 var context = {
     index:"_all",
-    from:"now-10m",
     fetchsize: 100
 }
 /***************************************************
