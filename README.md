@@ -10,7 +10,7 @@ node:
 		Context is what varables pass to the search template for json markup
 		context=<key>=<val> is a way to set any varable inside the context array. 
 		Make sure this is used after --contextfile or --context=<customejson>
-	[--index=<index>|--context=index=<index>     default: _all
+	[--index=<index>|--context=index=<index>]     default: _all
 ```
 
 Example Command
