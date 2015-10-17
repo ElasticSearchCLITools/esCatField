@@ -16,6 +16,8 @@ var colour = require('colour')
 // console.info = function (){};
 // Count of documents retrieved which tells us when the scan/scroll is finished
 var count = 0;
+// Add Time and index that the field is from
+var pretty =0;
 // the Host to connect to
 var url="localhost:9200"
 // Default search template (json markup) 
@@ -28,7 +30,8 @@ var loglevel="error"
 // This is used for the JSON Markup - I'll probably add a file option 
 var context = {
     index:"_all",
-    fetchsize: 100
+    fetchsize: 100,
+    field: "message"
 }
 /***************************************************
 **
@@ -47,11 +50,15 @@ process.argv.forEach(function (val, ind, array) {
         console.log("\t[--url="+url+"]");
         console.log("\t[--search=<filename> default: "+searchFilename);
         console.log("\t[--fetchsize='20'  default: 100 ");
+        console.log("\t[--pretty  default: 0 ");
         console.log("\t[--context='{ 'custom':'json'}'  default:"+JSON.stringify(context) );
 	console.log("\t\t\tContext is what varables pass to the search template for json markup");
 	console.log("\t\t\tcontext=<key>=<val> is a way to set any varable inside the context array. Make sure this is used after --contextfile or --context=<customejson>");
         console.log("\t[--index=<index>|--context=index=<index>     default: "+context.index);
         process.exit(1)
+    }
+    if(val === "--pretty" ){
+	pretty=true;
     }
     if(val.indexOf('=') >0){
         var s = val.split(/=/);
@@ -99,11 +106,9 @@ var client = new elasticsearch.Client({
   host: url,
   protocol: 'http',
   index: context.index,
-  keepAlive: true ,
   ignore: [404],
-  suggestCompression: true,
-  sniffOnStart: true,
-  sniffInterval: 60000,
+  log: loglevel,
+  suggestCompression: true
 });
 /**************************************************
 **
@@ -131,6 +136,7 @@ client.ping({
 	// convert the Template to a valid search
 	var search = markupjs.up(searchTemplate,context); 
 	// Execute the Search
+	//console.log(search);
 	client.search( JSON.parse(search) , ph = function printHits(error, response) {
 	  	// Loop over the events
 	 	if (error != undefined) {
@@ -138,19 +144,22 @@ client.ping({
 			return;
 		}
 	  	response.hits.hits.forEach(function (hit) {
-		    console.log(hit._source["@timestamp"].red
-			+": ".green+hit._index.green+":".green
-			+hit._source.message)
+		    //console.log(hit);
+		    if( pretty ) {
+			    console.log(hit._source["@timestamp"].red
+				+": ".green+hit._index.green+":".green
+				+hit.fields[context.field][0])
+		    }else{
+			console.log(hit.fields[context.field][0]);
+		    }
 		    // Count the number of document read so far
 		    count++;
 	 	});
 	 	// If the retrieved docements equals the count then we are done
-		 if ( count >= response.hits.total ){ 
-			return;
-		 }
-		 // Else query the scroll again to get more documents
-		 client.scroll({
-		      scrollId: response._scroll_id,
-		      scroll: '30s'
-		 }, ph);
+		 if ( count < response.hits.total ){ 
+			 client.scroll({
+			      scrollId: response._scroll_id,
+			      scroll: '30s'
+			 }, ph);
+		}
 	});
