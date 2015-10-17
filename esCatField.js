@@ -13,7 +13,7 @@ var colour = require('colour')
 **
 ***************************************************/
 // Disable Info messages
-// console.info = function (){};
+console.info = function (){};
 // Count of documents retrieved which tells us when the scan/scroll is finished
 var count = 0;
 // Add Time and index that the field is from
@@ -85,7 +85,7 @@ process.argv.forEach(function (val, ind, array) {
 	    context = JSON.parse(context);
 	}
         if (s[0] === "--context" && s.length > 2 ){
-	    console.log(s);
+	    console.info(s);
             context[s[1]]=s[2]
 	    console.info("context."+s[1]+"="+s[2]);
         }
@@ -122,7 +122,7 @@ client.ping({
     console.error('elasticsearch cluster maybe down!');
     process.exit(1);
   }else{
-    console.log('Connected to Elasticsearch cluster.')	
+    console.info('Connected to Elasticsearch cluster.')	
   } 
 });
 
