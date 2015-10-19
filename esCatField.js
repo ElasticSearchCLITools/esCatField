@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**************************************************
 **
 ** Requirements
@@ -9,7 +10,7 @@ var fs = require('fs');
 var colour = require('colour')
 /**************************************************
 **
-** Varables
+* Varables
 **
 ***************************************************/
 // Disable Info messages
@@ -21,7 +22,7 @@ var pretty =0;
 // the Host to connect to
 var url="localhost:9200"
 // Default search template (json markup) 
-var searchFilename="default.search"
+var searchFilename=__dirname+"/default.search"
 // The DSL Query to Elasticsearch 
 // - I'll probably set a default so the script has no requirements to just work
 var searchTemplate = "";
