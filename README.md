@@ -3,7 +3,7 @@
 node ./esCatField.js  --help
 Processing Commandline arguments
 node:
-	[--url=localhost:9200]
+	[--hostport=localhost:9200]
 	[--search=<filename> default: default.search
 	[--fetchsize='20'  default: 100 
 	[--context='{ 'custom':'json'}'  default:{"index":"_all","fetchsize":100,field:"message"}
