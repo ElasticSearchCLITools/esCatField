@@ -20,7 +20,7 @@ var count = 0;
 // Add Time and index that the field is from
 var pretty =0;
 // the Host to connect to
-var url="localhost:9200"
+var hostport="localhost:9200"
 // Default search template (json markup) 
 var searchFilename=__dirname+"/default.search"
 // The DSL Query to Elasticsearch 
@@ -48,7 +48,7 @@ console.info("Processing Commandline arguments");
 process.argv.forEach(function (val, ind, array) {
     if(/^(-h|--help|-\?)$/.test(val) ){
         console.log(process.argv[0]+":");
-        console.log("\t[--url="+url+"]");
+        console.log("\t[--hostport="+hostport+"]");
         console.log("\t[--search=<filename> default: "+searchFilename);
         console.log("\t[--fetchsize='20'  default: 100 ");
         console.log("\t[--pretty  default: 0 ");
@@ -64,8 +64,8 @@ process.argv.forEach(function (val, ind, array) {
     if(val.indexOf('=') >0){
         var s = val.split(/=/);
         console.info(s[0] + ' : ' + s[1]); 
-        if (s[0] === "--url" ){
-            url=s[1];
+        if (s[0] === "--hostport" ){
+            hostport=s[1];
         }
 	if (s[0] === "--loglevel" ){
 	    loglevel = s[1];
@@ -104,7 +104,7 @@ if (fs.existsSync(searchFilename)) {
 }
 // Open the Elasticsearch Connection
 var client = new elasticsearch.Client({
-  host: url,
+  host: hostport,
   protocol: 'http',
   index: context.index,
   ignore: [404],
@@ -146,12 +146,14 @@ client.ping({
 		}
 	  	response.hits.hits.forEach(function (hit) {
 		    //console.log(hit);
+		    if ( typeof hit !== 'undefined' && typeof hit.fields !== 'undefined' ){ 
 		    if( pretty ) {
 			    console.log(hit._source["@timestamp"].red
 				+": ".green+hit._index.green+":".green
 				+hit.fields[context.field][0])
 		    }else{
 			console.log(hit.fields[context.field][0]);
+		    }
 		    }
 		    // Count the number of document read so far
 		    count++;
