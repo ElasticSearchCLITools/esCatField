@@ -150,7 +150,7 @@ client.ping({
 		    if( pretty ) {
 			    console.log(hit._source["@timestamp"].red
 				+": ".green+hit._index.green+":".green
-				+hit.fields[context.field][0])
+				+hit.fields[context.field][0].replace(/(\r\n|\n|\r)$/,""))
 		    }else{
 			console.log(hit.fields[context.field][0]);
 		    }
