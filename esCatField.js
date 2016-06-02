@@ -152,7 +152,7 @@ client.ping({
 				+": ".green+hit._index.green+":".green
 				+hit.fields[context.field][0].replace(/(\r\n|\n|\r)$/,""))
 		    }else{
-			console.log(hit.fields[context.field][0]);
+			console.log(hit.fields[context.field][0].replace(/(\r\n|\n|\r)$/,""));
 		    }
 		    }
 		    // Count the number of document read so far
